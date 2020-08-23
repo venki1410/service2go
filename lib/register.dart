@@ -1,55 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:service2go/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:service2go/listpage.dart';
-import 'package:service2go/register.dart';
-import 'package:service2go/service_accept.dart';
 
 
-void main() => runApp(MaterialApp(
-  home:login() ,
-));
+class register extends StatelessWidget {
 
-String value;
 
-class login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
           body: Center(
-              child: loginuser()
+              child: RegisterUser()
           )
       ),
       routes: <String, WidgetBuilder>{
-        '/registerpage': (BuildContext context) => new register(),
-        '/listpage': (BuildContext context) => new listpages(value:value),
-        '/service_accept': (BuildContext context) => new service_accept(),
+        '/loginpage': (BuildContext context) => new login(),
       },
     );
   }
 }
 
+class RegisterUser extends StatefulWidget {
 
-
-class loginuser extends StatefulWidget {
-
-  loginuserState createState() => loginuserState();
+  RegisterUserState createState() => RegisterUserState();
 
 }
 
-class loginuserState extends State {
+class RegisterUserState extends State {
 
   // Boolean variable for CircularProgressIndicator.
   bool visible = false ;
 
   // Getting value from TextField widget.
+  final nameController = TextEditingController();
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmpasswordController = TextEditingController();
+  Future loginpage() async{
 
-  Future loginuser() async{
+    Navigator.pushReplacementNamed(context, "/loginpage");
+  }
+  Future userRegistration() async{
 
     // Showing CircularProgressIndicator.
     setState(() {
@@ -57,14 +52,16 @@ class loginuserState extends State {
     });
 
     // Getting value from Controller
+    String name = nameController.text;
     String mobile = mobileController.text;
     String password = passwordController.text;
+    String confirmpassword = confirmpasswordController.text;
 
     // SERVER API URL
-    var url = 'http://vnplad.com/service2go/login_user.php';
+    var url = 'http://vnplad.com/service2go/register_user.php';
 
     // Store all data with Param Name.
-    var data = { 'mobile': mobile, 'password' : password, };
+    var data = {'name': name, 'mobile': mobile, 'password' : password, 'confirmpassword' : confirmpassword};
 
     // Starting Web API Call.
     var response = await http.post(url, body: json.encode(data));
@@ -78,7 +75,6 @@ class loginuserState extends State {
         visible = false;
       });
     }
-
     // Showing Alert Dialog with Response JSON Message.
     showDialog(
       context: context,
@@ -88,22 +84,15 @@ class loginuserState extends State {
           actions: <Widget>[
             FlatButton(
               child: new Text("OK"),
-              onPressed: () {
-
+              onPressed: (){
                 Navigator.of(context).pop();
-
               },
             ),
           ],
         );
       },
     );
-    if(message == 'Login Successfull') {
-      Navigator.pushReplacementNamed(context, "/listpage");
-    }
-    else{
-      Navigator.pushReplacementNamed(context, "/service_accept");
-    }
+    Navigator.pushReplacementNamed(context, "/loginpage");
   }
 
   @override
@@ -114,7 +103,7 @@ class loginuserState extends State {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 20.0, bottom: 50.0),
+                    padding: EdgeInsets.only(left: 20.0),
 
                   ),
                   new SizedBox(height: 30.0,),
@@ -128,9 +117,14 @@ class loginuserState extends State {
 
                   Divider(),
 
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 30.0),
-
+                  Container(
+                      width: 280,
+                      padding: EdgeInsets.all(10.0),
+                      child: TextField(
+                        controller: nameController,
+                        autocorrect: true,
+                        decoration: InputDecoration(labelText: 'Enter Your Name*'),
+                      )
                   ),
 
                   Container(
@@ -142,12 +136,8 @@ class loginuserState extends State {
                           new LengthLimitingTextInputFormatter(10),
                         ],
                         autocorrect: true,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            labelText: "Mobile Number*"),
-                        onChanged: (text){
-                          value = text;
-                        },
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(labelText: 'Enter Your Mobile Number*'),
                       )
                   ),
 
@@ -158,37 +148,71 @@ class loginuserState extends State {
                         controller: passwordController,
                         autocorrect: true,
                         obscureText: true,
-                        decoration: InputDecoration(
-                            labelText: "Password*"),
+                        decoration: InputDecoration(labelText: 'Enter Your Password*'),
                       )
                   ),
 
-
+                  Container(
+                      width: 280,
+                      padding: EdgeInsets.all(10.0),
+                      child: TextField(
+                        controller: confirmpasswordController,
+                        autocorrect: true,
+                        obscureText: true,
+                        decoration: InputDecoration(labelText: 'Confirm Password*'),
+                      )
+                  ),
                   new Padding(
                     padding: EdgeInsets.only(
-                        left: 0.0, top: 20.0, bottom: 20.0),
+                        left: 0.0, top: 17.0, bottom: 5.0),
                     child: new RaisedButton(
                       shape: new RoundedRectangleBorder(
                           borderRadius:
                           new BorderRadius.circular(30.0)),
                       onPressed: () {
-                        if (!(mobileController.value.text
-                            .trim()
-                            .toString()
-                            .length >
-                            9)) {
-                          Fluttertoast.showToast(
-                              msg: "Please enter Mobile Number.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1);
-                        } else if (!(passwordController.value.text
+                        if (!(nameController.value.text
                             .trim()
                             .toString()
                             .length >
                             1)) {
                           Fluttertoast.showToast(
-                              msg: "Please enter the Password.",
+                              msg: "Please enter user name.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1);
+                        } else if (!(mobileController.value.text
+                            .trim()
+                            .toString()
+                            .length >
+                            1)) {
+                          Fluttertoast.showToast(
+                              msg: "Please enter your Mobile Number.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1);
+                        }else if (!(passwordController.value.text
+                            .trim()
+                            .toString()
+                            .length >
+                            1)) {
+                          Fluttertoast.showToast(
+                              msg: "Please enter Password.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1);
+                        }else if (!(confirmpasswordController.value.text
+                            .trim()
+                            .toString()
+                            .length >
+                            1)) {
+                          Fluttertoast.showToast(
+                              msg: "Please enter Confirm Password.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1);
+                        } else if (!(confirmpasswordController.value.text == passwordController.value.text)) {
+                          Fluttertoast.showToast(
+                              msg: "Confirm Password not matched.",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.CENTER,
                               timeInSecForIosWeb: 1);
@@ -208,14 +232,14 @@ class loginuserState extends State {
                           //password_controller.clear();
                           //Navigator.of(context).pop(LOGIN_SCREEN);
 
-                          loginuser();
+                          userRegistration();
 
 
 
                         }
                       },
                       child: new Text(
-                        "Login",
+                        "Register",
                         style: new TextStyle(
                             fontWeight: FontWeight.bold),
                       ),
@@ -229,33 +253,16 @@ class loginuserState extends State {
                           bottom: 15.0),
                     ),
                   ),
-                  FlatButton(
-                    onPressed: (){
-                      //forgot password screen
-                      Navigator.pushReplacementNamed(context, "/passwordchange");
-                    },
-                    textColor: Colors.blue,
-                    child: Text('Forgot Password'),
-                    padding: EdgeInsets.only(
-                        left: 80.0,
-                        right: 80.0,
-                        top: 15.0,
-                        bottom: 15.0),
-                  ),
 
                   FlatButton(
-                    onPressed: (){
-                      //forgot password screen
-                      Navigator.pushReplacementNamed(context, "/registerpage");
-                    },
+                    onPressed: loginpage,
                     textColor: Colors.blue,
-                    child: Text('New member? Register Here',
+                    child: Text('Already Member? Login Here',
                       style: TextStyle(
                           decoration:
                           TextDecoration.underline,
                           fontSize: 15.0),),
                   ),
-
 
                   Visibility(
                       visible: visible,
