@@ -219,8 +219,8 @@ class loginuserState extends State {
                         style: new TextStyle(
                             fontWeight: FontWeight.bold),
                       ),
-                      color: Color(0xFF54C5F8),
-                      textColor: Colors.white,
+                      color: Colors.yellow,
+                      textColor: Colors.black,
                       elevation: 5.0,
                       padding: EdgeInsets.only(
                           left: 80.0,

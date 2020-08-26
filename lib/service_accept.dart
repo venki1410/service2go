@@ -4,174 +4,145 @@ import 'package:http/http.dart' as http;
 import 'package:service2go/main.dart';
 
 
-
 class service_accept extends StatelessWidget {
+  String Service_Codes;
+  String value;
+  service_accept({this.value, this.Service_Codes});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(
-
-            title: Text('Service2Go'),
-            automaticallyImplyLeading: true,
-            leading: IconButton(icon:Icon(Icons.arrow_back),
-              onPressed:() => Navigator.pop(context, false),
-            ),
-          ),
-
+          appBar: AppBar(backgroundColor: Colors.yellow,
+              title: Text('VENKATESH',
+              style:TextStyle(color:Color(000000))),),
           body: Center(
-              child: service_accepts()
+              child: service_entry_admins()
           )
       ),
-      routes: <String, WidgetBuilder>{
-        '/loginpage': (BuildContext context) => new login(),
-      },
     );
   }
+}
+
+class service_entry_admins extends StatefulWidget {
+
+  service_acceptState createState() => service_acceptState();
 
 }
 
-class service_accepts extends StatefulWidget {
+class service_acceptState extends State {
+  final ServiceCodeController = TextEditingController();
+  Future service_update() async{
 
-  service_acceptsState createState() => service_acceptsState();
-
-}
-
-class service_acceptsState extends State {
-
-  // Boolean variable for CircularProgressIndicator.
-  bool visible = false;
-
-  bool visit = false;
-
-  bool pickup = false;
-  String t = "false";
-  String vt = "false";
-
-  void toggleCheckbox(bool value) {
-
-  }
-
-  // Getting value from TextField widget.
-  final nameController = TextEditingController();
-  final mobileController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmpasswordController = TextEditingController();
-
-  Future loginpage() async {
-    Navigator.pushReplacementNamed(context, "/loginpage");
-  }
-
-  Future userRegistration() async {
     // Showing CircularProgressIndicator.
-    setState(() {
-      visible = true;
-    });
+
 
     // Getting value from Controller
-    String model = nameController.text;
-    String version = mobileController.text;
-    String vnumber = passwordController.text;
-    String address = confirmpasswordController.text;
-    String visit = vt;
-    String pickup = t;
+    String Status = 'OnProgess';
+    String ServiceCode = ServiceCodeController.text;
 
     // SERVER API URL
-    var url = 'http://vnplad.com/service2go/bookvehicle.php';
+    var url = 'http://vnplad.com/service2go/service_update.php';
 
     // Store all data with Param Name.
-    var data = {
-      'name': model,
-      'mobile': version,
-      'password': vnumber,
-      'confirmpassword': address,
-      'visit': visit,
-      'pickup': pickup,
-    };
+    var data = {'Status': Status,'ServiceCode': ServiceCode};
 
     // Starting Web API Call.
-    var response = await http.post(url, body: json.encode(data));
+    http.post(url, body: json.encode(data));
 
-    // Getting Server response into variable.
-    var message = jsonDecode(response.body);
+  }
 
-    // If Web call Success than Hide the CircularProgressIndicator.
+
+  final String uri = 'http://www.vnplad.com/service2go/serviceavailable.php';
+
+  Future<List<Users>> _fetchUsers() async {
+    var response = await http.get(uri);
+
     if (response.statusCode == 200) {
-      setState(() {
-        visible = false;
-      });
-    }
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Users> listOfUsers = items.map<Users>((json) {
+        return Users.fromJson(json);
+      }).toList();
 
-    // Showing Alert Dialog with Response JSON Message.
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text(message),
-          actions: <Widget>[
-            FlatButton(
-              child: new Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+      return listOfUsers;
+    } else {
+      throw Exception('Failed to load internet');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: ListView(
+      body: SingleChildScrollView(
+          child: Center(
 
+              child: Column(
+                  children: <Widget>[
+                    new Image.asset(
+                      "assets/images/bikeservice.png",
+                      fit: BoxFit.scaleDown,
+                    ),
+                    Container(
+                        child:FutureBuilder<List<Users>>(
+                          future: _fetchUsers(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
 
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.map),
-            title: Text('Map'),
-          ),
-          ListTile(
-            leading: Icon(Icons.photo_album),
-            title: Text('Album'),
-          ),
-          ListTile(
-            leading: Icon(Icons.phone),
-            title: Text('Phone'),
-          ),
-        ],
-      ),
+                            return ListView(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                children: snapshot.data
+                                    .map((user) => Card( child: ListTile(
+                                  title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
+                                  subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number),
+                                  trailing: Wrap(
+                                      spacing: 12,
+                                     // var Service_Codes =  Text(user.Service_Code),// space between two icons
+                                  children: <Widget>[
 
-
-
-
+                                    IconButton( icon: Icon(Icons.check),
+                                        onPressed: () {
+                                          service_update();
+                                        }
+                                    ), // icon-1
+                                    IconButton( icon:   Icon(Icons.close),
+                                        onPressed: () {}
+                                    ),// icon-2
+                                  ],
+                                ),
+                                )
+                                ))
+                                .toList(),
+                            );
+                          },
+                        ))]))),
     );
-
   }
+}
 
-  void something() {
-    setState(() {
-      if (pickup) {
-        t = "false";
-        pickup = !pickup;
-      } else {
-        t = "true";
-        pickup = !pickup;
-      }
-    }
+class Users {
+  String version;
+  String model;
+  String brands;
+  String vehicle_number;
+  String Service_Code;
+
+  Users({
+    this.version,
+    this.model,
+    this.brands,
+    this.vehicle_number,
+    this.Service_Code,
+  });
+
+  factory Users.fromJson(Map<String, dynamic> json) {
+    return Users(
+      version: json['version'],
+      brands: json['brands'],
+      model: json['model'],
+      vehicle_number: json['vehicle_number'],
+      Service_Code: json['Service_Code'],
     );
   }
-  void somethings(){
-    setState(() {
-      if(visit){
-        vt = "false";
-        visit = !visit;
-      }else{
-        vt = "true";
-        visit = !visit;
-      }
-
-    });
-
-  }}
+}
