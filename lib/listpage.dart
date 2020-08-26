@@ -7,6 +7,7 @@ import 'package:service2go/main.dart';
 import 'package:service2go/referfriends.dart';
 import 'package:service2go/todayoffers.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Constants{
   static const String FirstItem = 'My Profile';
@@ -218,7 +219,25 @@ class listpage extends StatefulWidget {
 class listpageState extends State {
 
   int _currentIndex = 0;
+  String mobile ="";
 
+  Future getMobile()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      mobile = preferences.getString('mobile');
+    });
+  }
+
+  Future LogOut()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('mobile');
+   // Navigator.push(context, MaterialPageRoute(builder: (context)=>Login(),)
+  }
+
+  @override
+  void initState(){
+     getMobile();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

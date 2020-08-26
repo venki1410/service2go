@@ -6,11 +6,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:service2go/listpage.dart';
 import 'package:service2go/register.dart';
 import 'package:service2go/service_accept.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-void main() => runApp(MaterialApp(
-  home:login() ,
-));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  var mobile = preferences.getString('mobile');
+  runApp(MaterialApp(
+    home: mobile == null ? login() : listpages(),
+  ));
+}
 
 String value;
 
@@ -64,7 +69,7 @@ class loginuserState extends State {
     var url = 'http://vnplad.com/service2go/login_user.php';
 
     // Store all data with Param Name.
-    var data = { 'mobile': mobile, 'password' : password, };
+     var data = { 'mobile': mobile, 'password' : password, };
 
     // Starting Web API Call.
     var response = await http.post(url, body: json.encode(data));
@@ -100,6 +105,8 @@ class loginuserState extends State {
     );
     if(message == 'Login Successfull') {
       Navigator.pushReplacementNamed(context, "/listpage");
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('mobile', mobileController.text);
     }
     else{
       Navigator.pushReplacementNamed(context, "/service_accept");
