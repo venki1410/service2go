@@ -21,7 +21,7 @@ class admin extends StatelessWidget {
       length: _kTabs.length,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Admin'),
+          title: Text('Admin',style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.yellowAccent,
           // If `TabController controller` is not provided, then a
           // DefaultTabController ancestor must be provided instead.
@@ -29,6 +29,7 @@ class admin extends StatelessWidget {
           // bar" example.
           bottom: TabBar(
             tabs: _kTabs,
+            labelColor: Colors.black,
           ),
         ),
         body: TabBarView(
@@ -92,13 +93,7 @@ class service_acceptState extends State {
       body: SingleChildScrollView(
           child: Center(
 
-              child: Column(
-                  children: <Widget>[
-                    new Image.asset(
-                      "assets/images/bikeservice.png",
-                      fit: BoxFit.scaleDown,
-                    ),
-                    Container(
+              child: Container(
                         child:FutureBuilder<List<Users>>(
                           future: _fetchUsers(),
                           builder: (context, snapshot) {
@@ -131,8 +126,7 @@ class service_acceptState extends State {
                                   .toList(),
                             );
                           },
-                        ))]))),
-    );
+                        )))));
   }
 }
 
