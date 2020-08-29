@@ -30,7 +30,7 @@ void choiceAction(String choice) {
   } else if (choice == Constants.SecondItem) {
     print('Settings');
   } else if (choice == Constants.ThirdItem) {
-    print('Logout');
+    print('Settings');
   }
 }
 class listpages extends StatelessWidget {
@@ -231,7 +231,7 @@ class listpageState extends State {
   Future LogOut()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('mobile');
-   // Navigator.push(context, MaterialPageRoute(builder: (context)=>Login(),)
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>login()),);
   }
 
   @override

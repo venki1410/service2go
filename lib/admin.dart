@@ -1,23 +1,39 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:service2go/main.dart';
 
+class admin extends StatelessWidget {
+  const admin({Key key}) : super(key: key);
 
-class service_accept extends StatelessWidget {
-  String Service_Codes;
-  String value;
-  service_accept({this.value, this.Service_Codes});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
-              title: Text('Service2Go'),),
-          body: Center(
-              child: service_entry_admins()
-          )
+    final _kTabPages = <Widget>[
+      Center(child: service_entry_admins()),
+      Center(child: Icon(Icons.alarm, size: 64.0, color: Colors.cyan)),
+      Center(child: Icon(Icons.forum, size: 64.0, color: Colors.blue)),
+    ];
+    final _kTabs = <Tab>[
+      Tab(text: 'ORDERS'),
+      Tab(text: 'STATUS'),
+      Tab(text: 'RESULT'),
+    ];
+    return DefaultTabController(
+      length: _kTabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Admin'),
+          backgroundColor: Colors.yellowAccent,
+          // If `TabController controller` is not provided, then a
+          // DefaultTabController ancestor must be provided instead.
+          // Another way is to use a self-defined controller, c.f. "Bottom tab
+          // bar" example.
+          bottom: TabBar(
+            tabs: _kTabs,
+          ),
+        ),
+        body: TabBarView(
+          children: _kTabPages,
+        ),
       ),
     );
   }
@@ -89,15 +105,15 @@ class service_acceptState extends State {
                             if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
 
                             return ListView(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                children: snapshot.data
-                                    .map((user) => Card( child: ListTile(
-                                  title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
-                                  subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number),
-                                  trailing: Wrap(
-                                      spacing: 12,
-                                     // var Service_Codes =  Text(user.Service_Code),// space between two icons
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              children: snapshot.data
+                                  .map((user) => Card( child: ListTile(
+                                title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
+                                subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number),
+                                trailing: Wrap(
+                                  spacing: 12,
+                                  // var Service_Codes =  Text(user.Service_Code),// space between two icons
                                   children: <Widget>[
 
                                     IconButton( icon: Icon(Icons.check),
@@ -110,9 +126,9 @@ class service_acceptState extends State {
                                     ),// icon-2
                                   ],
                                 ),
-                                )
-                                ))
-                                .toList(),
+                              )
+                              ))
+                                  .toList(),
                             );
                           },
                         ))]))),

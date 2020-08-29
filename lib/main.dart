@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:service2go/listpage.dart';
 import 'package:service2go/register.dart';
+import 'package:service2go/admin.dart';
 import 'package:service2go/service_accept.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +33,7 @@ class login extends StatelessWidget {
         '/registerpage': (BuildContext context) => new register(),
         '/listpage': (BuildContext context) => new listpages(value:value),
         '/service_accept': (BuildContext context) => new service_accept(),
+        '/admin': (BuildContext context) => new admin(),
       },
     );
   }
@@ -109,7 +111,7 @@ class loginuserState extends State {
       preferences.setString('mobile', mobileController.text);
     }
     else{
-      Navigator.pushReplacementNamed(context, "/service_accept");
+      Navigator.pushReplacementNamed(context, "/admin");
     }
   }
 
@@ -226,7 +228,7 @@ class loginuserState extends State {
                         style: new TextStyle(
                             fontWeight: FontWeight.bold),
                       ),
-                      color: Colors.yellow,
+                      color: Colors.yellowAccent,
                       textColor: Colors.black,
                       elevation: 5.0,
                       padding: EdgeInsets.only(
