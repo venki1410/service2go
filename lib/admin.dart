@@ -9,8 +9,8 @@ class admin extends StatelessWidget {
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
       Center(child: service_entry_admins()),
-      Center(child: Icon(Icons.alarm, size: 64.0, color: Colors.cyan)),
-      Center(child: Icon(Icons.forum, size: 64.0, color: Colors.blue)),
+      Center(child: service_entry_Status()),
+      Center(child: service_entry_Result()),
     ];
     final _kTabs = <Tab>[
       Tab(text: 'ORDERS'),
@@ -48,14 +48,9 @@ class service_entry_admins extends StatefulWidget {
 
 class service_acceptState extends State {
   final ServiceCodeController = TextEditingController();
-  Future service_update() async{
-
-    // Showing CircularProgressIndicator.
-
-
-    // Getting value from Controller
-    String Status = 'OnProgess';
-    String ServiceCode = ServiceCodeController.text;
+  Future service_update(String sc,String st) async{
+    String ServiceCode = sc;
+    String Status = st;
 
     // SERVER API URL
     var url = 'http://vnplad.com/service2go/service_update.php';
@@ -69,7 +64,7 @@ class service_acceptState extends State {
   }
 
 
-  final String uri = 'http://www.vnplad.com/service2go/serviceavailable.php';
+  final String uri = 'http://www.vnplad.com/service2go/serviceavailable.php/orders';
 
   Future<List<Users>> _fetchUsers() async {
     var response = await http.get(uri);
@@ -113,11 +108,18 @@ class service_acceptState extends State {
 
                                     IconButton( icon: Icon(Icons.check),
                                         onPressed: () {
-                                          service_update();
+                                          String service_code=user.Service_Code;
+                                          String status = "accepted";
+                                          service_update(service_code,status);
                                         }
                                     ), // icon-1
                                     IconButton( icon:   Icon(Icons.close),
-                                        onPressed: () {}
+                                        onPressed: () {
+                                          String service_code=user.Service_Code;
+                                          String status = "cancelled";
+                                          service_update(service_code,status);
+
+                                        }
                                     ),// icon-2
                                   ],
                                 ),
@@ -129,6 +131,184 @@ class service_acceptState extends State {
                         )))));
   }
 }
+
+
+
+
+
+class service_entry_Status extends StatefulWidget {
+
+  service_acceptStatus createState() => service_acceptStatus();
+
+}
+
+class service_acceptStatus extends State {
+  final ServiceCodeController = TextEditingController();
+  Future service_update(String sc,String st) async{
+    String ServiceCode = sc;
+    String Status = st;
+
+    // SERVER API URL
+    var url = 'http://vnplad.com/service2go/service_update.php';
+
+    // Store all data with Param Name.
+    var data = {'Status': Status,'ServiceCode': ServiceCode};
+
+    // Starting Web API Call.
+    http.post(url, body: json.encode(data));
+
+  }
+
+
+  final String uri = 'http://www.vnplad.com/service2go/serviceavailable.php/status';
+
+  Future<List<Users>> _fetchUsers() async {
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Users> listOfUsers = items.map<Users>((json) {
+        return Users.fromJson(json);
+      }).toList();
+
+      return listOfUsers;
+    } else {
+      throw Exception('Failed to load internet');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+        body: SingleChildScrollView(
+            child: Center(
+
+                child: Container(
+                    child:FutureBuilder<List<Users>>(
+                      future: _fetchUsers(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+
+                        return ListView(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          children: snapshot.data
+                              .map((user) => Card( child: ListTile(
+                            title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
+                            subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number),
+                            trailing: Wrap(
+                              spacing: 12,
+                              // var Service_Codes =  Text(user.Service_Code),// space between two icons
+                              children: <Widget>[
+
+                                IconButton( icon: Icon(Icons.check),
+                                    onPressed: () {
+                                      String service_code=user.Service_Code;
+                                      String status = "completed";
+                                      service_update(service_code,status);
+                                    }
+                                ), // icon-1
+                                // icon-2
+                              ],
+                            ),
+                          )
+                          ))
+                              .toList(),
+                        );
+                      },
+                    )))));
+  }
+}
+
+
+
+class service_entry_Result extends StatefulWidget {
+
+  service_acceptResult createState() => service_acceptResult();
+
+}
+
+class service_acceptResult extends State {
+  final ServiceCodeController = TextEditingController();
+  Future service_update(String sc,String st) async{
+    String ServiceCode = sc;
+    String Status = st;
+
+    // SERVER API URL
+    var url = 'http://vnplad.com/service2go/service_update.php';
+
+    // Store all data with Param Name.
+    var data = {'Status': Status,'ServiceCode': ServiceCode};
+
+    // Starting Web API Call.
+    http.post(url, body: json.encode(data));
+
+  }
+
+
+  final String uri = 'http://www.vnplad.com/service2go/serviceavailable.php/result';
+
+  Future<List<Users>> _fetchUsers() async {
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Users> listOfUsers = items.map<Users>((json) {
+        return Users.fromJson(json);
+      }).toList();
+
+      return listOfUsers;
+    } else {
+      throw Exception('Failed to load internet');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+        body: SingleChildScrollView(
+            child: Center(
+
+                child: Container(
+                    child:FutureBuilder<List<Users>>(
+                      future: _fetchUsers(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+
+                        return ListView(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          children: snapshot.data
+                              .map((user) => Card( child: ListTile(
+                            title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
+                            subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number),
+                            trailing: Wrap(
+                              spacing: 12,
+                              // var Service_Codes =  Text(user.Service_Code),// space between two icons
+                              children: <Widget>[
+
+                                // icon-2
+                              ],
+                            ),
+                          )
+                          ))
+                              .toList(),
+                        );
+                      },
+                    )))));
+  }
+}
+
+
+
+
+
+
+
+
+
 
 class Users {
   String version;

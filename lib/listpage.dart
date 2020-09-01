@@ -490,7 +490,6 @@ class RegisterUserState extends State {
     String Brands = _selectedText;
     String SetTime = _time;
     String Setdate = _date;
-
     // SERVER API URL
     var url = 'http://vnplad.com/service2go/bookvehicle.php/${value}';
 
