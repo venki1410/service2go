@@ -8,6 +8,7 @@ import 'package:service2go/referfriends.dart';
 import 'package:service2go/todayoffers.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:service2go/usr.dart';
 
 class Constants{
   static const String FirstItem = 'My Profile';
@@ -25,13 +26,7 @@ class Constants{
 
 }
 void choiceAction(String choice) {
-  if (choice == Constants.FirstItem) {
-    print('My Profile');
-  } else if (choice == Constants.SecondItem) {
-    print('Settings');
-  } else if (choice == Constants.ThirdItem) {
-    print('Settings');
-  }
+
 }
 class listpages extends StatelessWidget {
 
@@ -39,145 +34,49 @@ class listpages extends StatelessWidget {
   listpages({this.value});
 
 
+
   @override
   Widget build(BuildContext context) {
+
+    Future LogOut()async{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.remove('mobile');
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>login()),);
+    }
+
+    Future profile()async{
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) =>usrs() ));
+    }
+
+
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
 
-            appBar: AppBar(backgroundColor: Colors.yellow,title: Text('Service2Go'),
-              actions: <Widget>[
-                PopupMenuButton<String>(
-                  onSelected: choiceAction,
-                  itemBuilder: (BuildContext context) {
-                    return Constants.choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                )
-              ],
-            ),
-            body: Center(
-                child: listpage()
-            ),
+          appBar: AppBar(backgroundColor: Colors.yellow,title: Text('Service2Go',style: TextStyle(color: Colors.black)),
+            actions: <Widget>[
+              IconButton( icon:   Icon(Icons.person_outline,color: Colors.black),
+                  onPressed: () {
+                    profile();
+
+                  }),
+
+              IconButton( icon:   Icon(Icons.input,color: Colors.black),
+                  onPressed: () {
+                    LogOut();
+
+                  })
+
+            ],
+          ),
+          body: Center(
+              child: listpage()
+          ),
 
 
-            drawer: Drawer(
-              // Add a ListView to the drawer. This ensures the user can scroll
-              // through the options in the drawer if there isn't enough vertical
-              // space to fit everything.
 
-              child: ListView(
-                // Important: Remove any padding from the ListView.
-                  padding: EdgeInsets.zero,
-                  children: <Widget>[
-
-                    DrawerHeader(
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                      ),
-                      child: Stack(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  'http://www.bbk.ac.uk/mce/wp-content/uploads/2015/03/8327142885_9b447935ff.jpg'),
-                              radius: 50.0,
-                            ),
-                          ),
-                          Container(
-                            width: 0.0, height: 0.0,
-                            child : Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Profile',
-                                style: TextStyle(color: Colors.white, fontSize: 20.0),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight + Alignment(0, .3),
-                            child: Text(
-                              'Flutter Youtuber',
-                              style: TextStyle(
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight + Alignment(0, .8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Text(
-                                  'Verified', style: TextStyle(color: Colors.white),),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),]),)
-/*
-      Padding(padding: const EdgeInsets.all(3.0));
-      ListTile(
-        title: Text('Book Service'),
-        onTap: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => Bookservice()));
-        },
-        trailing: Wrap(children: <Widget>[
-          Icon(Icons.arrow_forward_ios),
-        ]),
-      );
-      Padding(padding: const EdgeInsets.all(5.0));
-      Divider();
-      Padding(padding: const EdgeInsets.all(3.0));
-      ListTile(
-        title: Text('My Vehicle'),
-        onTap: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => myvehicle()));
-        },
-        trailing: Wrap(children: <Widget>[
-          Icon(Icons.arrow_forward_ios),
-        ]),
-      );
-      Padding(padding: const EdgeInsets.all(5.0));
-      Divider();
-      Padding(padding: const EdgeInsets.all(3.0));
-      ListTile(
-        title: Text('My Services'),
-        onTap: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => Servicehistory()));
-        },
-        trailing: Wrap(children: <Widget>[
-          Icon(Icons.arrow_forward_ios),
-        ]),
-      );
-      Padding(padding: const EdgeInsets.all(5.0));
-      Divider();
-      Padding(padding: const EdgeInsets.all(3.0));
-      ListTile(
-        title: Text('Refer Friend'),
-        onTap: () {
-          // Update the state of the app.
-          // ...
-        },
-        trailing: Wrap(children: <Widget>[
-          Icon(Icons.arrow_forward_ios),
-        ]),
-      );*/
         ) );
 
 
@@ -185,6 +84,7 @@ class listpages extends StatelessWidget {
 
 
 }
+
 
 
 class Userssprofile {
@@ -225,18 +125,36 @@ class listpageState extends State {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       mobile = preferences.getString('mobile');
+
     });
   }
+  String url ='http://www.vnplad.com/service2go/usr.php/';
 
-  Future LogOut()async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove('mobile');
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>login()),);
+
+  Future<List<usr>> _fetchusr() async {
+    final String uri = url + mobile;
+    print(uri);
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<usr> listOfusr = items.map<usr>((json) {
+        return usr.fromJson(json);
+      }).toList();
+
+      return listOfusr;
+    } else {
+      throw Exception('Failed to load internet');
+    }
   }
+
+
 
   @override
   void initState(){
-     getMobile();
+    getMobile();
+    _fetchusr();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -407,6 +325,181 @@ class listpageState extends State {
 
 }
 
+class usrs extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return
+
+      MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+
+            appBar: AppBar(backgroundColor: Colors.yellow,
+              title: Text('Service2Go', style: TextStyle(color: Colors.black)),
+            ),
+            body: Center(
+                child:profileusrs()
+            ),
+          )
+      );
+  }
+}
+
+class profileusrs extends StatefulWidget {
+
+  profileusrsState createState() => profileusrsState();
+
+}
+
+
+class profileusrsState extends State {
+  String mobile ="";
+
+  Future getMobile()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      mobile = preferences.getString('mobile');
+
+    });
+  }
+
+  String url ='http://www.vnplad.com/service2go/usr.php/';
+
+
+  Future<List<usr>> _fetchusr() async {
+    final String uri = url + mobile;
+    print(uri);
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<usr> listOfusr = items.map<usr>((json) {
+        return usr.fromJson(json);
+      }).toList();
+
+      return listOfusr;
+    } else {
+      throw Exception('Failed to load internet');
+    }
+  }
+
+  @override
+  void initState(){
+    getMobile();
+    _fetchusr();
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Profile Page UI Design using Flutter ",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+        backgroundColor: Colors.blue[300],
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 80,
+                  backgroundImage: AssetImage('images/protocoder.png'),
+                ),
+                Text(
+                  'Proto Coders Point',
+                  style: TextStyle(
+                    fontFamily: 'SourceSansPro',
+                    fontSize: 25,
+                  ),
+                ),
+                Text(
+                  'Welcome',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'SourceSansPro',
+                    color: Colors.red[400],
+                    letterSpacing: 2.5,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                  width: 200,
+                  child: Divider(
+                    color: Colors.teal[100],
+                  ),
+                ),
+                Text("Keep visiting protocoderspoint.com for more contents"),
+                Card(
+                    color: Colors.white,
+                    margin:
+                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.phone,
+                        color: Colors.teal[900],
+                      ),
+                      title: Text(
+                        '+91 85465XXX8XX',
+                        style:
+                        TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),
+                      ),
+                    )),
+                Container(
+                    child:FutureBuilder<List<usr>>(
+                      future: _fetchusr(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+
+                        return ListView(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          primary:false,
+                          children: snapshot.data
+                              .map((user) => Card(
+                              color: Colors.white,
+                              margin:
+                              EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                              child: ListTile(
+                                title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.mobile_number,
+                                  style:
+                                  TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),),
+
+                              )))
+                              .toList(),
+
+                        );
+                      },
+                    )),
+                Card(
+                  color: Colors.white,
+                  margin:
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.cake,
+                      color: Colors.teal[900],
+                    ),
+                    title: Text(
+                      '08-05-1995',
+                      style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 // <!------------------------------------ Book Service Page ------------------------------------------------------------> //
 
 class Bookservice extends StatelessWidget {
@@ -490,6 +583,7 @@ class RegisterUserState extends State {
     String Brands = _selectedText;
     String SetTime = _time;
     String Setdate = _date;
+
     // SERVER API URL
     var url = 'http://vnplad.com/service2go/bookvehicle.php/${value}';
 
@@ -1736,6 +1830,34 @@ class Userss {
       version: json['version_no'],
       model: json['model_name'],
       bike_no: json['bike_number'],
+    );
+  }
+}
+
+
+class usr {
+  String username;
+  String mobile_number;
+  String password;
+  String earnpoints;
+  String mode;
+
+
+  usr({
+    this.username,
+    this.mobile_number,
+    this.password,
+    this.earnpoints,
+    this.mode,
+  });
+
+  factory usr.fromJson(Map<String, dynamic> json) {
+    return usr(
+      username: json['username'],
+      mobile_number: json['mobile_number'],
+      password: json['password'],
+      earnpoints: json['earnpoints'],
+      mode: json['mode'],
     );
   }
 }

@@ -23,6 +23,15 @@ class admin extends StatelessWidget {
         appBar: AppBar(
           title: Text('Admin',style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.yellowAccent,
+          actions: <Widget>[
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(child: Text('logout'))
+                ];
+              },
+            )
+          ],
           // If `TabController controller` is not provided, then a
           // DefaultTabController ancestor must be provided instead.
           // Another way is to use a self-defined controller, c.f. "Bottom tab
@@ -47,6 +56,7 @@ class service_entry_admins extends StatefulWidget {
 }
 
 class service_acceptState extends State {
+  bool eyes = true;
   final ServiceCodeController = TextEditingController();
   Future service_update(String sc,String st) async{
     String ServiceCode = sc;
@@ -60,6 +70,9 @@ class service_acceptState extends State {
 
     // Starting Web API Call.
     http.post(url, body: json.encode(data));
+    setState(() {
+      eyes = false;
+    });
 
   }
 
@@ -87,8 +100,9 @@ class service_acceptState extends State {
     return Scaffold(
       body: SingleChildScrollView(
           child: Center(
-
-              child: Container(
+              child: Column(
+                  children: <Widget>[
+               Container(
                         child:FutureBuilder<List<Users>>(
                           future: _fetchUsers(),
                           builder: (context, snapshot) {
@@ -97,6 +111,7 @@ class service_acceptState extends State {
                             return ListView(
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
+                              primary:false,
                               children: snapshot.data
                                   .map((user) => Card( child: ListTile(
                                 title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
@@ -106,29 +121,31 @@ class service_acceptState extends State {
                                   // var Service_Codes =  Text(user.Service_Code),// space between two icons
                                   children: <Widget>[
 
-                                    IconButton( icon: Icon(Icons.check),
+                                    IconButton( icon: Icon(Icons.check,color: Colors.green),
                                         onPressed: () {
                                           String service_code=user.Service_Code;
                                           String status = "accepted";
                                           service_update(service_code,status);
+                                          snapshot.data.removeWhere((user) => user.Service_Code == service_code);
                                         }
                                     ), // icon-1
-                                    IconButton( icon:   Icon(Icons.close),
+                                    IconButton( icon:   Icon(Icons.close,color: Colors.pink),
                                         onPressed: () {
                                           String service_code=user.Service_Code;
                                           String status = "cancelled";
                                           service_update(service_code,status);
+                                          snapshot.data.removeWhere((user) => user.Service_Code == service_code);
 
                                         }
                                     ),// icon-2
                                   ],
                                 ),
-                              )
-                              ))
+
+                              )))
                                   .toList(),
                             );
                           },
-                        )))));
+                        ))]))));
   }
 }
 
@@ -156,6 +173,7 @@ class service_acceptStatus extends State {
 
     // Starting Web API Call.
     http.post(url, body: json.encode(data));
+
 
   }
 
@@ -192,6 +210,7 @@ class service_acceptStatus extends State {
 
                         return ListView(
                           scrollDirection: Axis.vertical,
+                          primary:false,
                           shrinkWrap: true,
                           children: snapshot.data
                               .map((user) => Card( child: ListTile(
@@ -202,9 +221,10 @@ class service_acceptStatus extends State {
                               // var Service_Codes =  Text(user.Service_Code),// space between two icons
                               children: <Widget>[
 
-                                IconButton( icon: Icon(Icons.check),
+                                IconButton( icon: Icon(Icons.check,color: Colors.green),
                                     onPressed: () {
                                       String service_code=user.Service_Code;
+                                      snapshot.data.removeWhere((user) => user.Service_Code == service_code);
                                       String status = "completed";
                                       service_update(service_code,status);
                                     }
@@ -268,10 +288,13 @@ class service_acceptResult extends State {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Center(
-
-                child: Container(
+        body: Padding(
+            padding: EdgeInsets.all(10),
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                    children: <Widget>[
+                 Container(
                     child:FutureBuilder<List<Users>>(
                       future: _fetchUsers(),
                       builder: (context, snapshot) {
@@ -279,11 +302,12 @@ class service_acceptResult extends State {
 
                         return ListView(
                           scrollDirection: Axis.vertical,
+                          primary:false,
                           shrinkWrap: true,
                           children: snapshot.data
                               .map((user) => Card( child: ListTile(
                             title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.brands),
-                            subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number),
+                            subtitle: Text("\nModel Name\t\t:\t\t"+user.model+"\nVersion Number\t\t:\t\t"+user.version+"\nVehicle Number\t\t:\t\t"+user.vehicle_number+"\n\nSTATUS\t\t:\t\t"+user.sstatus),
                             trailing: Wrap(
                               spacing: 12,
                               // var Service_Codes =  Text(user.Service_Code),// space between two icons
@@ -297,7 +321,7 @@ class service_acceptResult extends State {
                               .toList(),
                         );
                       },
-                    )))));
+                    ))])))));
   }
 }
 
@@ -316,6 +340,7 @@ class Users {
   String brands;
   String vehicle_number;
   String Service_Code;
+  String sstatus;
 
   Users({
     this.version,
@@ -323,6 +348,7 @@ class Users {
     this.brands,
     this.vehicle_number,
     this.Service_Code,
+    this.sstatus,
   });
 
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -332,6 +358,7 @@ class Users {
       model: json['model'],
       vehicle_number: json['vehicle_number'],
       Service_Code: json['Service_Code'],
+      sstatus: json['Status'],
     );
   }
 }

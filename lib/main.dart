@@ -9,6 +9,7 @@ import 'package:service2go/admin.dart';
 import 'package:service2go/service_accept.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
