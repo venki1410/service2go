@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:service2go/listpage.dart';
 import 'package:service2go/register.dart';
 import 'package:service2go/admin.dart';
+import 'package:service2go/forget.dart';
 import 'package:service2go/service_accept.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +36,8 @@ class login extends StatelessWidget {
         '/listpage': (BuildContext context) => new listpages(value:value),
         '/service_accept': (BuildContext context) => new service_accept(),
         '/admin': (BuildContext context) => new admin(),
+        '/forget': (BuildContext context) => new forget(),
+        '/login': (BuildContext context) => new login(),
       },
     );
   }
@@ -242,7 +245,7 @@ class loginuserState extends State {
                   FlatButton(
                     onPressed: (){
                       //forgot password screen
-                      Navigator.pushReplacementNamed(context, "/passwordchange");
+                      Navigator.pushReplacementNamed(context, "/forget");
                     },
                     textColor: Colors.blue,
                     child: Text('Forgot Password'),

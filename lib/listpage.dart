@@ -8,30 +8,12 @@ import 'package:service2go/referfriends.dart';
 import 'package:service2go/todayoffers.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:service2go/usr.dart';
 
-class Constants{
-  static const String FirstItem = 'My Profile';
-  static const String SecondItem = 'Settings';
-  static const String ThirdItem = 'Logout';
-
-  static const List<String> choices = <String>[
-    FirstItem,
-    SecondItem,
-    ThirdItem,
-  ];
-
-
-
-
-}
-void choiceAction(String choice) {
-
-}
 class listpages extends StatelessWidget {
 
   String value;
   listpages({this.value});
+
 
 
 
@@ -117,7 +99,7 @@ class listpage extends StatefulWidget {
 
 
 class listpageState extends State {
-
+  List<String> items;
   int _currentIndex = 0;
   String mobile ="";
 
@@ -158,6 +140,8 @@ class listpageState extends State {
   }
   @override
   Widget build(BuildContext context) {
+    const double ARROW_WIDTH = 20.0;
+    const double ARROW_ICON_SIZE = 18.0;
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex, // this will be set when a new tab is tapped
@@ -178,6 +162,7 @@ class listpageState extends State {
             });
           },
         ),
+
         body:  SingleChildScrollView(
             child: Center(
               child: Column(
@@ -188,24 +173,39 @@ class listpageState extends State {
 
                     fit: BoxFit.scaleDown,
                   ),
+
                   Row(
                     children: [
                       Expanded(
                         /*1*/
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            /*2*/
-                            Container(
-                              color: Colors.grey[350],
-                              padding: const EdgeInsets.only(bottom: 40, top: 40),
-                              child:Center(
-                                child: Text('No Offer Found!',
-                                    textAlign: TextAlign.center),
+
+                        child:Container(
+                          margin: EdgeInsets.symmetric(),
+                          height: 100.0,
+                          child:  ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+
+                              Container(
+                                width: 200.0,
+                                color: Colors.grey[350],
+                                child:Center(
+                                  child: Text('No Offer Found!',
+                                      textAlign: TextAlign.center),
+                                ),
                               ),
-                            ),
-                          ],
+                              Container(
+                                width: 200.0,
+                                color: Colors.grey[350],
+                                child:Center(
+                                  child: Text('No Offer Found!',
+                                      textAlign: TextAlign.center),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+
                       ),
                       /*3*/
                     ],
@@ -326,9 +326,9 @@ class listpageState extends State {
 }
 
 class usrs extends StatelessWidget {
+
   Widget build(BuildContext context) {
     return
-
       MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
@@ -349,6 +349,22 @@ class profileusrs extends StatefulWidget {
   profileusrsState createState() => profileusrsState();
 
 }
+class Albumprofileuser {
+  final username;
+  final mode;
+  final mobile_number;
+
+  Albumprofileuser({  this.username, this.mode, this.mobile_number});
+
+  factory Albumprofileuser.fromJson(Map<String, dynamic> json) {
+    return Albumprofileuser(
+      username: json['username'],
+      mode: json['mode'],
+      mobile_number: json['mobile_number'],
+    );
+  }
+
+}
 
 
 class profileusrsState extends State {
@@ -361,141 +377,119 @@ class profileusrsState extends State {
 
     });
   }
-
-  String url ='http://www.vnplad.com/service2go/usr.php/';
-
-
-  Future<List<usr>> _fetchusr() async {
-    final String uri = url + mobile;
-    print(uri);
-    var response = await http.get(uri);
+  Future<Albumprofileuser> fetchprofileuser() async {
+    String url ='http://www.vnplad.com/service2go/usr.php/';
+    String uri = url + mobile;
+    final response =
+    await http.get(uri,  headers: {"Accept": "application/json"});
 
     if (response.statusCode == 200) {
-      final items = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<usr> listOfusr = items.map<usr>((json) {
-        return usr.fromJson(json);
-      }).toList();
-
-      return listOfusr;
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      final jsonresponse = json.decode(response.body);
+      return Albumprofileuser.fromJson(jsonresponse[0]);
     } else {
-      throw Exception('Failed to load internet');
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
     }
   }
 
   @override
   void initState(){
     getMobile();
-    _fetchusr();
 
   }
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Profile Page UI Design using Flutter ",
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-        backgroundColor: Colors.blue[300],
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 80,
-                  backgroundImage: AssetImage('images/protocoder.png'),
-                ),
-                Text(
-                  'Proto Coders Point',
-                  style: TextStyle(
-                    fontFamily: 'SourceSansPro',
-                    fontSize: 25,
-                  ),
-                ),
-                Text(
-                  'Welcome',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'SourceSansPro',
-                    color: Colors.red[400],
-                    letterSpacing: 2.5,
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                  width: 200,
-                  child: Divider(
-                    color: Colors.teal[100],
-                  ),
-                ),
-                Text("Keep visiting protocoderspoint.com for more contents"),
-                Card(
-                    color: Colors.white,
-                    margin:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.phone,
-                        color: Colors.teal[900],
-                      ),
-                      title: Text(
-                        '+91 85465XXX8XX',
-                        style:
-                        TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),
-                      ),
-                    )),
-                Container(
-                    child:FutureBuilder<List<usr>>(
-                      future: _fetchusr(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+    return  Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex, // this will be set when a new tab is tapped
+        items: [
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.home),
+            title: new Text('Home'),
 
-                        return ListView(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          primary:false,
-                          children: snapshot.data
-                              .map((user) => Card(
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text('Profile'),
+          )
+        ],
+        onTap:(index){
+          setState((){
+            _currentIndex = index;
+          });
+        },
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(25),
+              ),
+              CircleAvatar(
+                  radius: 80,
+                  child:IconButton(padding: EdgeInsets.zero,icon:Icon(Icons.perm_identity,size: 50.0,), onPressed: () {  },)
+              ),
+              SizedBox(
+                height: 20.0,
+                width: 200,
+                child: Divider(
+                  color: Colors.teal[100],
+                ),
+              ),
+              Container(
+                  child: FutureBuilder<Albumprofileuser>(
+                    future: fetchprofileuser(),
+                    builder: (context,  snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(children: <Widget>[
+                          Card(
                               color: Colors.white,
                               margin:
                               EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                              child: ListTile(
-                                title: Text("\nService Date\t\t:\nBrand Name\t\t:\t\t"+user.mobile_number,
-                                  style:
-                                  TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),),
+                              child:ListTile(
+                                  leading: Icon(
+                                    Icons.person,
+                                    color: Colors.teal[900],
+                                  ),
+                                  title:Text(snapshot.data.username,style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
+                                  ))),
+                          Card(
+                              color: Colors.white,
+                              margin:
+                              EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                              child:ListTile(
+                                  leading: Icon(
+                                    Icons.phone,
+                                    color: Colors.teal[900],
+                                  ),
+                                  title:Text(snapshot.data.mobile_number,style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
+                                  )))]);
 
-                              )))
-                              .toList(),
 
-                        );
-                      },
-                    )),
-                Card(
-                  color: Colors.white,
-                  margin:
-                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.cake,
-                      color: Colors.teal[900],
-                    ),
-                    title: Text(
-                      '08-05-1995',
-                      style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
-                    ),
-                  ),
-                ),
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
 
-              ],
-            ),
+                      // By default, show a loading spinner.
+                      return CircularProgressIndicator();
+                    },
+                  )),
+
+
+            ],
           ),
         ),
       ),
     );
+
   }
 }
 
@@ -1267,7 +1261,6 @@ class myrewardsState extends State {
   void initState() {
     super.initState();
     futureAlbum = fetchAlbum();
-
   }
 
   @override
@@ -1277,13 +1270,10 @@ class myrewardsState extends State {
             child: Center(
               child: Column(
                 children: <Widget>[
-
-
                   Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text("My Rewards",
                           style: TextStyle(fontSize: 21))),
-
                   Divider(),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
