@@ -71,6 +71,7 @@ class loginuserState extends State {
     String mobile = mobileController.text;
     String password = passwordController.text;
 
+
     // SERVER API URL
     var url = 'http://vnplad.com/service2go/login_user.php';
 
@@ -114,8 +115,13 @@ class loginuserState extends State {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('mobile', mobileController.text);
     }
-    else{
+    else if(message == 'Welcome Admin'){
       Navigator.pushReplacementNamed(context, "/admin");
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('mobile', mobileController.text);
+    }
+    else if(message == 'Not Exists'){
+      Navigator.push(context,new MaterialPageRoute(builder: (context) =>login() ));
     }
   }
 
@@ -157,7 +163,11 @@ class loginuserState extends State {
                         autocorrect: true,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            labelText: "Mobile Number*"),
+                            labelText: "Mobile Number*",
+                          prefixIcon: const Icon(
+                            Icons.phone,
+                            color: Colors.amber,
+                          ),),
                         onChanged: (text){
                           value = text;
                         },
@@ -172,7 +182,11 @@ class loginuserState extends State {
                         autocorrect: true,
                         obscureText: true,
                         decoration: InputDecoration(
-                            labelText: "Password*"),
+                            labelText: "Password*",
+                          prefixIcon: const Icon(
+                            Icons.lock,
+                            color: Colors.amber,
+                          ),),
                       )
                   ),
 
@@ -232,7 +246,7 @@ class loginuserState extends State {
                         style: new TextStyle(
                             fontWeight: FontWeight.bold),
                       ),
-                      color: Colors.yellowAccent,
+                      color: Colors.amber,
                       textColor: Colors.black,
                       elevation: 5.0,
                       padding: EdgeInsets.only(

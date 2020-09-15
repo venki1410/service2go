@@ -17,8 +17,11 @@ class listpages extends StatelessWidget {
 
 
 
+
   @override
   Widget build(BuildContext context) {
+
+
 
     Future LogOut()async{
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,6 +33,7 @@ class listpages extends StatelessWidget {
       Navigator.push(context,
           new MaterialPageRoute(builder: (context) =>usrs() ));
     }
+
 
 
 
@@ -65,8 +69,8 @@ class listpages extends StatelessWidget {
   }
 
 
-}
 
+}
 
 
 class Userssprofile {
@@ -90,7 +94,10 @@ class Userssprofile {
       bike_no: json['bike_number'],
     );
   }
+
+
 }
+
 class listpage extends StatefulWidget {
 
   listpageState createState() => listpageState();
@@ -99,9 +106,16 @@ class listpage extends StatefulWidget {
 
 
 class listpageState extends State {
+
+
+
+
   List<String> items;
   int _currentIndex = 0;
   String mobile ="";
+
+
+
 
   Future getMobile()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -136,6 +150,8 @@ class listpageState extends State {
   void initState(){
     getMobile();
     _fetchusr();
+
+
 
   }
   @override
@@ -363,17 +379,28 @@ class Albumprofileuser {
       mobile_number: json['mobile_number'],
     );
   }
+  Future setMode() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('mode',mode);
+  }
 
+  @override
+  void initState(){
+    setMode();
+
+  }
 }
 
 
 class profileusrsState extends State {
   String mobile ="";
 
+
   Future getMobile()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       mobile = preferences.getString('mobile');
+
 
     });
   }
@@ -394,16 +421,28 @@ class profileusrsState extends State {
       throw Exception('Failed to load album');
     }
   }
+  Future adminCheck()async{
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String mm = preferences.getString('mode');
+    print(mm);
+    if(mm=="admin"){
+
+      Navigator.pushReplacementNamed(context, "/admin");
+    }
+  }
+
 
   @override
   void initState(){
     getMobile();
+    adminCheck();
 
   }
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
     return  Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex, // this will be set when a new tab is tapped
