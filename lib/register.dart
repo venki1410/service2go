@@ -243,7 +243,7 @@ class RegisterUserState extends State {
                         style: new TextStyle(
                             fontWeight: FontWeight.bold),
                       ),
-                      color: Color(0xFF54C5F8),
+                      color: Colors.amber,
                       textColor: Colors.white,
                       elevation: 5.0,
                       padding: EdgeInsets.only(
@@ -256,7 +256,7 @@ class RegisterUserState extends State {
 
                   FlatButton(
                     onPressed: loginpage,
-                    textColor: Colors.blue,
+                    textColor: Colors.amber,
                     child: Text('Already Member? Login Here',
                       style: TextStyle(
                           decoration:

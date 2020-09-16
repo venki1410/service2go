@@ -38,7 +38,7 @@ class admin extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Admin',style: TextStyle(color: Colors.black)),
-          backgroundColor: Colors.yellowAccent,
+          backgroundColor: Colors.amber,
           actions: <Widget>[
             IconButton( icon:   Icon(Icons.person_outline,color: Colors.black),
                 onPressed: () {
@@ -354,7 +354,7 @@ class usrs extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: Scaffold(
 
-            appBar: AppBar(backgroundColor: Colors.yellow,
+            appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go', style: TextStyle(color: Colors.black)),
             ),
             body: Center(
@@ -469,7 +469,7 @@ class profileusrsState extends State {
                               child:ListTile(
                                   leading: Icon(
                                     Icons.person,
-                                    color: Colors.teal[900],
+                                    color: Colors.amber,
                                   ),
                                   title:Text(snapshot.data.username,style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
                                   ))),
@@ -480,7 +480,7 @@ class profileusrsState extends State {
                               child:ListTile(
                                   leading: Icon(
                                     Icons.phone,
-                                    color: Colors.teal[900],
+                                    color: Colors.amber,
                                   ),
                                   title:Text(snapshot.data.mobile_number,style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
                                   )))]);

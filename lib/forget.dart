@@ -174,7 +174,7 @@ class forgetUserState extends State {
                         style: new TextStyle(
                             fontWeight: FontWeight.bold),
                       ),
-                      color: Color(0xFF54C5F8),
+                      color: Colors.amber,
                       textColor: Colors.white,
                       elevation: 5.0,
                       padding: EdgeInsets.only(
@@ -211,7 +211,7 @@ class otp extends StatelessWidget {
     return MaterialApp(
       title: 'Awesome Credit Card Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
       home: otpPage(),
     );
@@ -423,15 +423,19 @@ class changePasswordState extends State<changePassword> {
                                 passwordController2.value.text) {
                               updatePassword();
                             }
-                          }
+                          },
+                       child:new Text(
+                        "VERIFY",
+                        style: new TextStyle(
+                            fontWeight: FontWeight.bold),
+                      ),
+                        color: Colors.amber,
+                        textColor: Colors.black,
+                        elevation: 5.0,
                       )
 
                   ),
-                  Text(
-                    "VERIFY",
-                    style: new TextStyle(
-                        fontWeight: FontWeight.bold),
-                  ),
+
 
 
 

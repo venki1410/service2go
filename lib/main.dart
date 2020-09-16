@@ -261,7 +261,7 @@ class loginuserState extends State {
                       //forgot password screen
                       Navigator.pushReplacementNamed(context, "/forget");
                     },
-                    textColor: Colors.blue,
+                    textColor: Colors.black54,
                     child: Text('Forgot Password'),
                     padding: EdgeInsets.only(
                         left: 80.0,
@@ -275,7 +275,7 @@ class loginuserState extends State {
                       //forgot password screen
                       Navigator.pushReplacementNamed(context, "/registerpage");
                     },
-                    textColor: Colors.blue,
+                    textColor: Colors.black54,
                     child: Text('New member? Register Here',
                       style: TextStyle(
                           decoration:
