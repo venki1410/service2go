@@ -166,7 +166,7 @@ class loginuserState extends State {
                             labelText: "Mobile Number*",
                           prefixIcon: const Icon(
                             Icons.phone,
-                            color: Colors.amber,
+                            color: Colors.orange,
                           ),),
                         onChanged: (text){
                           value = text;
@@ -185,7 +185,7 @@ class loginuserState extends State {
                             labelText: "Password*",
                           prefixIcon: const Icon(
                             Icons.lock,
-                            color: Colors.amber,
+                            color: Colors.orange,
                           ),),
                       )
                   ),
@@ -247,7 +247,7 @@ class loginuserState extends State {
                             fontWeight: FontWeight.bold),
                       ),
                       color: Colors.amber,
-                      textColor: Colors.black,
+                      textColor: Colors.white,
                       elevation: 5.0,
                       padding: EdgeInsets.only(
                           left: 80.0,

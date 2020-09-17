@@ -16,12 +16,8 @@ class listpages extends StatelessWidget {
 
 
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
 
     Future LogOut()async{
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -36,27 +32,9 @@ class listpages extends StatelessWidget {
 
 
 
-
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-
-          appBar: AppBar(backgroundColor: Colors.yellow,title: Text('Service2Go',style: TextStyle(color: Colors.black)),
-            actions: <Widget>[
-              IconButton( icon:   Icon(Icons.person_outline,color: Colors.black),
-                  onPressed: () {
-                    profile();
-
-                  }),
-
-              IconButton( icon:   Icon(Icons.input,color: Colors.black),
-                  onPressed: () {
-                    LogOut();
-
-                  })
-
-            ],
-          ),
           body: Center(
               child: listpage()
           ),
@@ -69,8 +47,138 @@ class listpages extends StatelessWidget {
   }
 
 
+}
+
+
+
+
+class listpage extends StatefulWidget {
+
+  listpageState createState() => listpageState();
 
 }
+
+
+class listpageState extends State {
+  List<Widget> _pages;
+  Widget _page1;
+  Widget _page2;
+  Widget _page3;
+
+  int _currentIndex;
+  Widget _currentPage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _page1 = homepages();
+    _page2 = usrs();
+
+    _pages = [_page1, _page2];
+
+    _currentIndex = 0;
+    _currentPage = _page1;
+  }
+
+  void changeTab(int index) {
+    setState(() {
+      _currentIndex = index;
+      _currentPage = _pages[index];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: _currentPage,
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) => changeTab(index),
+          currentIndex: _currentIndex,
+          selectedItemColor: Colors.orange,
+          items: [
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.home),
+              title: new Text('Home'),
+
+            ),
+
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text('Profile'),
+            )
+          ]),
+    );
+  }
+
+  Widget navigationItemListTitle(String title, int index) {
+    return new ListTile(
+      title: new Text(
+        title,
+        style: new TextStyle(color: Colors.amber, fontSize: 22.0),
+      ),
+      onTap: () {
+        Navigator.pop(context);
+        changeTab(index);
+      },
+    );
+  }
+}
+
+
+class homepages extends StatelessWidget {
+
+  String value;
+  homepages({this.value});
+
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    Future LogOut()async{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.remove('mobile');
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>login()),);
+    }
+
+    Future profile()async{
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) =>usrs() ));
+    }
+
+
+
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+
+          appBar: AppBar(backgroundColor: Colors.amber,title: Text('Service2Go',style: TextStyle(color: Colors.black)),
+            actions: <Widget>[
+
+
+              IconButton( icon:   Icon(Icons.input,color: Colors.black),
+                  onPressed: () {
+                    LogOut();
+
+                  })
+
+            ],
+          ),
+          body: Center(
+              child: homepage()
+          ),
+
+
+
+        ) );
+
+
+  }
+
+
+}
+
 
 
 class Userssprofile {
@@ -94,28 +202,17 @@ class Userssprofile {
       bike_no: json['bike_number'],
     );
   }
-
-
 }
+class homepage extends StatefulWidget {
 
-class listpage extends StatefulWidget {
-
-  listpageState createState() => listpageState();
+  homepagesState createState() => homepagesState();
 
 }
 
 
-class listpageState extends State {
-
-
-
-
+class homepagesState extends State {
   List<String> items;
-  int _currentIndex = 0;
   String mobile ="";
-
-
-
 
   Future getMobile()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -147,38 +244,16 @@ class listpageState extends State {
 
 
   @override
-  void initState(){
+  void initState() {
     getMobile();
     _fetchusr();
-
-
-
   }
+
   @override
   Widget build(BuildContext context) {
-    const double ARROW_WIDTH = 20.0;
-    const double ARROW_ICON_SIZE = 18.0;
+
+
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex, // this will be set when a new tab is tapped
-          items: [
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.home),
-              title: new Text('Home'),
-            ),
-
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                title: Text('Profile')
-            )
-          ],
-          onTap:(index){
-            setState((){
-              _currentIndex = index;
-            });
-          },
-        ),
-
         body:  SingleChildScrollView(
             child: Center(
               child: Column(
@@ -194,34 +269,20 @@ class listpageState extends State {
                     children: [
                       Expanded(
                         /*1*/
-
-                        child:Container(
-                          margin: EdgeInsets.symmetric(),
-                          height: 100.0,
-                          child:  ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-
-                              Container(
-                                width: 200.0,
-                                color: Colors.grey[350],
-                                child:Center(
-                                  child: Text('No Offer Found!',
-                                      textAlign: TextAlign.center),
-                                ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /*2*/
+                            Container(
+                              color: Colors.grey[350],
+                              padding: const EdgeInsets.only(bottom: 40, top: 40),
+                              child:Center(
+                                child: Text('No Offer Found!',
+                                    textAlign: TextAlign.center),
                               ),
-                              Container(
-                                width: 200.0,
-                                color: Colors.grey[350],
-                                child:Center(
-                                  child: Text('No Offer Found!',
-                                      textAlign: TextAlign.center),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-
                       ),
                       /*3*/
                     ],
@@ -291,7 +352,7 @@ class listpageState extends State {
                                   child: Column(
                                     children: <Widget>[
                                       Icon(Icons.motorcycle, size: 50),
-                                      Text('My Vehicle'),
+                                      Text('  My Vehicle  '),
                                     ],
 
                                   ),
@@ -349,7 +410,7 @@ class usrs extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: Scaffold(
 
-            appBar: AppBar(backgroundColor: Colors.yellow,
+            appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go', style: TextStyle(color: Colors.black)),
             ),
             body: Center(
@@ -379,28 +440,17 @@ class Albumprofileuser {
       mobile_number: json['mobile_number'],
     );
   }
-  Future setMode() async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('mode',mode);
-  }
 
-  @override
-  void initState(){
-    setMode();
-
-  }
 }
 
 
 class profileusrsState extends State {
   String mobile ="";
 
-
   Future getMobile()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       mobile = preferences.getString('mobile');
-
 
     });
   }
@@ -421,49 +471,18 @@ class profileusrsState extends State {
       throw Exception('Failed to load album');
     }
   }
-  Future adminCheck()async{
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String mm = preferences.getString('mode');
-    print(mm);
-    if(mm=="admin"){
-
-      Navigator.pushReplacementNamed(context, "/admin");
-    }
-  }
-
 
   @override
   void initState(){
     getMobile();
-    adminCheck();
 
   }
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-
+    // TODO: implement build
     return  Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
 
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text('Profile'),
-          )
-        ],
-        onTap:(index){
-          setState((){
-            _currentIndex = index;
-          });
-        },
-      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -496,7 +515,7 @@ class profileusrsState extends State {
                               child:ListTile(
                                   leading: Icon(
                                     Icons.person,
-                                    color: Colors.teal[900],
+                                    color: Colors.orange,
                                   ),
                                   title:Text(snapshot.data.username,style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
                                   ))),
@@ -507,7 +526,7 @@ class profileusrsState extends State {
                               child:ListTile(
                                   leading: Icon(
                                     Icons.phone,
-                                    color: Colors.teal[900],
+                                    color: Colors.orange,
                                   ),
                                   title:Text(snapshot.data.mobile_number,style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
                                   )))]);
@@ -547,7 +566,7 @@ class Bookservice extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.yellow,
+            backgroundColor: Colors.amber,
             title:Center( child: Text('Service2Go')),
             automaticallyImplyLeading: true,
             leading: IconButton(icon:Icon(Icons.arrow_back),
@@ -686,7 +705,7 @@ class RegisterUserState extends State {
                   Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(5.0),
-                      color: Colors.blue[400],
+                      color: Colors.amber,
                       child:Center( child : Text('Book your vehicle for Service',
                           style: TextStyle(fontSize: 21,
                               color:Colors.white)))),
@@ -792,7 +811,7 @@ class RegisterUserState extends State {
                           child: Text(
                             " $_date",
                             style: TextStyle(
-                                color: Colors.teal,
+                                color: Colors.amber,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18.0),
                           ),
@@ -815,7 +834,7 @@ class RegisterUserState extends State {
                           child: Text(
                             " $_time",
                             style: TextStyle(
-                                color: Colors.teal,
+                                color: Colors.amber,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18.0),
                           ),
@@ -832,7 +851,7 @@ class RegisterUserState extends State {
                             new Checkbox(
                               value: visit,
                               onChanged: (bool e) => somethings(),
-                              activeColor: Colors.pink,
+                              activeColor: Colors.amber,
                               checkColor: Colors.white,
                               tristate: false,
                             ),
@@ -849,7 +868,7 @@ class RegisterUserState extends State {
                             Checkbox(
                               value: pickup,
                               onChanged: (bool e) => something(),
-                              activeColor: Colors.pink,
+                              activeColor: Colors.amber,
                               checkColor: Colors.white,
                               tristate: false,
                             ),
@@ -862,7 +881,7 @@ class RegisterUserState extends State {
                   Divider(),
                   RaisedButton(
                     onPressed: bookserviceregister,
-                    color: Color(0xFF54C5F8),
+                    color: Colors.amber,
                     textColor: Colors.white,
                     elevation: 5.0,
                     padding: EdgeInsets.only(
@@ -922,7 +941,7 @@ class addvehicle extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.yellow,
+            backgroundColor: Colors.amber,
             title: Text('Service2Go'),
             automaticallyImplyLeading: true,
             leading: IconButton(icon:Icon(Icons.arrow_back),
@@ -1122,7 +1141,7 @@ class RegisterUserStates extends State {
 
                   RaisedButton(
                     onPressed: addvehicleregister,
-                    color: Color(0xFF54C5F8),
+                    color: Colors.amber,
                     textColor: Colors.white,
                     elevation: 5.0,
                     padding: EdgeInsets.only(
@@ -1181,7 +1200,7 @@ class referfriends extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
+          appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go')),
           body: Center(
               child: referfriendss()
@@ -1276,7 +1295,7 @@ class myrewards extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
+          appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go')),
           body: Center(
               child: myrewardss()
@@ -1371,7 +1390,7 @@ class redeempage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
+          appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go')),
           body: Center(
               child: redeempages()
@@ -1468,7 +1487,7 @@ class reedempoints extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
+          appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go')),
           body: Center(
               child: reedempointss()
@@ -1536,7 +1555,7 @@ class reedempointsState extends State {
                   RaisedButton(
                     onPressed: (){ Navigator.push(context,
                         new MaterialPageRoute(builder: (context) =>Bookservice() ));},
-                    color: Colors.green,
+                    color: Colors.amber,
                     textColor: Colors.white,
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Text('Burn'),
@@ -1597,7 +1616,7 @@ class Servicehistory extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
+          appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go')),
           body: Center(
               child: Servicehistorys()
@@ -1700,7 +1719,7 @@ class myvehicle extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(backgroundColor: Colors.yellow,
+          appBar: AppBar(backgroundColor: Colors.amber,
               title: Text('Service2Go')),
           body: Center(
               child: myvehicles()
@@ -1764,7 +1783,7 @@ class myvehicleState extends State {
                       Container(
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.all(5.0),
-                          color: Colors.blue[400],
+                          color: Colors.amber,
                           child:Center( child : Text('My Vehicle',
                               style: TextStyle(fontSize: 21,
                                   color:Colors.white)))),
